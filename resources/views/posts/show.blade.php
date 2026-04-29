@@ -24,7 +24,7 @@
             </div>
             
             <div class="text-muted mb-3">
-                <span>👤 By {{ $post->user->name }}</span>
+                <span>👤 By <a href="{{ route('users.posts', $post->user) }}" class="text-decoration-none fw-bold">{{ $post->user->name }}</a></span>
                 <span class="mx-2">•</span>
                 <span>📅 {{ $post->created_at->format('F j, Y') }}</span>
             </div>
@@ -37,7 +37,7 @@
                 <div class="mb-4">
                     <strong class="fw-bold">Tags:</strong>
                     @foreach($post->tags as $tag)
-                        <span class="badge bg-info ms-1">#{{ $tag->name }}</span>
+                        <a href="{{ route('tags.posts', $tag) }}" class="badge bg-info ms-1 text-decoration-none">#{{ $tag->name }}</a>
                     @endforeach
                 </div>
             @endif
