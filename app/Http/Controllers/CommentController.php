@@ -14,12 +14,14 @@ class CommentController extends Controller
     {
 
         $request->validate([
-            'body' => 'required|min:3|max:1000'
+            'body' => 'required|min:3|max:1000',
+            'parent_id' => 'nullable|exists:comments,id',
         ]);
 
         Comment::create([
             'user_id' => 1,
             'post_id' => $post->id,
+            'parent_id' => $request->parent_id,
             'body' => $request->body,
         ]);
 
@@ -30,6 +32,7 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment)
     {
+        $comment->replies()->delete();
         $comment->delete();
         return redirect()->back()->with('success', 'Comment deleted successfully!');
     }

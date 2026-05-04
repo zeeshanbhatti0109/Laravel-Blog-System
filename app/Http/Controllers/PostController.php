@@ -56,7 +56,16 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post->load(['user', 'tags', 'comments.user']);
+        $post->load([
+            'user',
+            'tags',
+            'comments' => function($query) {
+                $query->whereNull('parent_id');
+            },
+            'comments.user',
+            'comments.replies',
+            'comments.replies.user'  // ← FIXED: changed "commentss" to "comments"
+        ]);
         return view('posts.show', compact('post'));
     }
 
