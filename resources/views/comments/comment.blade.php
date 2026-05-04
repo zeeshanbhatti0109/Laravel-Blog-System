@@ -4,7 +4,7 @@
     <div class="bg-white p-3 rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-start">
             <div>
-                <strong>{{ $comment->user->name }}</strong>
+                <strong><a href="/author/{{ $comment->user->slug }}/posts" class="text-decoration-none text-dark">{{ $comment->user->name }}</a></strong>
                 <small class="text-muted ms-2">{{ $comment->created_at->diffForHumans() }}</small>
             </div>
             

@@ -24,8 +24,9 @@
             </div>
         </div>
 
+        <!-- FIXED: Changed route('users.posts') to direct URL with slug -->
         <div class="text-muted mb-3">
-            <span>👤 By <a href="{{ route('users.posts', $post->user) }}" class="text-decoration-none fw-bold">{{
+            <span>👤 By <a href="/author/{{ $post->user->slug }}/posts" class="text-decoration-none fw-bold">{{
                     $post->user->name }}</a></span>
             <span class="mx-2">•</span>
             <span>📅 {{ $post->created_at->format('F j, Y') }}</span>

@@ -16,7 +16,7 @@
                 <div class="card h-100 shadow-sm post-card">
                     <div class="card-body">
                         <span class="badge bg-secondary mb-2">
-                            👤 <a href="{{ route('users.posts', $post->user) }}" class="text-white text-decoration-none">{{ $post->user->name }}</a>
+                            👤 <a href="/author/{{ $post->user->slug }}/posts" class="text-white text-decoration-none">{{ $post->user->name }}</a>
                         </span>
                         
                         <h5 class="card-title mb-3">{{ $post->title }}</h5>

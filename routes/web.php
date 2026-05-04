@@ -24,7 +24,7 @@ Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
 // User routes (for clickable author names)
-Route::get('/users/{user:slug}/posts', [UserController::class, 'posts'])->name('users.posts');
+Route::get('/author/{user:slug}/posts', [UserController::class, 'posts'])->name('users.posts');
 
 // Tag routes (for clickable tags)
 Route::get('/tags/{tag:slug}/posts', [TagController::class, 'posts'])->name('tags.posts');

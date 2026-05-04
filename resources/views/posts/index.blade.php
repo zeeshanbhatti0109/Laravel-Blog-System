@@ -16,8 +16,7 @@
         <div class="card h-100 shadow-sm post-card">
             <div class="card-body">
                 <span class="badge bg-secondary mb-2">
-                    👤 <a href="{{ route('users.posts', $post->user) }}" class="text-white text-decoration-none">{{
-                        $post->user->name }}</a>
+                    👤 <a href="/author/{{ $post->user->slug }}/posts" class="text-white text-decoration-none">{{ $post->user->name }}</a>
                 </span>
 
                 <a href="{{ route('posts.show', $post) }}" class="text-decoration-none text-dark">
@@ -31,8 +30,8 @@
                 @if($post->tags->count() > 0)
                 <div class="mb-3">
                     @foreach($post->tags as $tag)
-                    <a href="{{ route('tags.posts', $tag) }}" class="badge bg-info me-1 text-decoration-none">#{{
-                        $tag->name }}</a> @endforeach
+                    <a href="{{ route('tags.posts', $tag) }}" class="badge bg-info me-1 text-decoration-none">#{{ $tag->name }}</a>
+                    @endforeach
                 </div>
                 @endif
 
