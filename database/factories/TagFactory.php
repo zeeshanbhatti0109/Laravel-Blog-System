@@ -16,7 +16,12 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word(),
+            'name' => fake()->randomElement([
+                'technology', 'science', 'health', 'education', 'business',
+                'sports', 'entertainment', 'politics', 'travel', 'food',
+                'fashion', 'music', 'art', 'history', 'nature',
+                'photography', 'gaming', 'fitness', 'finance', 'marketing',
+            ]),
         ];
     }
 }
