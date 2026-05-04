@@ -20,7 +20,7 @@ class CommentFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->first()->id,  // ✅ Use existing user
             'post_id' => Post::inRandomOrder()->first()->id,  // ✅ Use existing post
-            'body' => fake()->paragraph(),
+            'body' => fake()->realText(rand(100, 300)),
         ];
     }
 }

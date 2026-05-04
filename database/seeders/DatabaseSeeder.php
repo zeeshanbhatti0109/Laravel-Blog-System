@@ -94,12 +94,12 @@ class DatabaseSeeder extends Seeder
 
             foreach ($userIds as $userId) {
                 for ($i = 1; $i <= 50; $i++) {
-                    $title = $faker->sentence();
+                    $title = $faker->realText(rand(30, 60));
                     $posts[] = [
                         'user_id' => $userId,
                         'title' => $title,
                         'slug' => Str::slug($title) . '-' . uniqid(),
-                        'body' => $faker->paragraphs(3, true),
+                        'body' => $faker->realText(rand(500, 1000)),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -123,8 +123,31 @@ class DatabaseSeeder extends Seeder
             $tags = [];
             $usedTagSlugs = [];
             
+            $englishTagWords = [
+                'technology', 'science', 'health', 'education', 'business',
+                'sports', 'entertainment', 'politics', 'travel', 'food',
+                'fashion', 'music', 'art', 'history', 'nature',
+                'photography', 'gaming', 'fitness', 'finance', 'marketing',
+                'design', 'programming', 'security', 'lifestyle', 'culture',
+                'environment', 'innovation', 'leadership', 'productivity', 'wellness',
+                'cooking', 'gardening', 'parenting', 'relationships', 'motivation',
+                'psychology', 'philosophy', 'economics', 'architecture', 'engineering',
+                'astronomy', 'biology', 'chemistry', 'mathematics', 'literature',
+                'poetry', 'journalism', 'cinema', 'theater', 'dance',
+                'yoga', 'meditation', 'nutrition', 'sustainability', 'charity',
+                'volunteering', 'community', 'startups', 'freelancing', 'remote-work',
+                'artificial-intelligence', 'machine-learning', 'blockchain', 'cloud-computing', 'cybersecurity',
+                'web-development', 'mobile-apps', 'data-science', 'robotics', 'automation',
+                'social-media', 'content-creation', 'branding', 'advertising', 'analytics',
+                'investing', 'cryptocurrency', 'real-estate', 'insurance', 'banking',
+                'healthcare', 'mental-health', 'self-improvement', 'career', 'networking',
+                'tutorials', 'reviews', 'interviews', 'case-studies', 'opinion',
+                'breaking-news', 'features', 'how-to', 'tips', 'guides',
+                'research', 'debates', 'events', 'awards', 'trends',
+            ];
+
             for ($i = 1; $i <= 100; $i++) {
-                $tagName = $faker->unique()->word();
+                $tagName = $englishTagWords[$i - 1];
                 $tagSlug = Str::slug($tagName);
                 
                 // Make tag slug unique
@@ -189,7 +212,7 @@ class DatabaseSeeder extends Seeder
                     'user_id' => $userIds[array_rand($userIds)],
                     'post_id' => $postIds[array_rand($postIds)],
                     'parent_id' => null,
-                    'body' => $faker->paragraph(),
+                    'body' => $faker->realText(rand(100, 300)),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

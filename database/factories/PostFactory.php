@@ -18,8 +18,8 @@ class PostFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'title' => fake()->sentence(),
-            'body' => fake()->paragraph(3, true),
+            'title' => fake()->realText(rand(30, 60)),
+            'body' => fake()->realText(rand(500, 1000)),
         ];
     }
 }
