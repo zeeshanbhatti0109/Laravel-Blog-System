@@ -8,38 +8,34 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $posts = Post::with(['user', 'tags', 'comments'])->latest()->paginate(12);
         return view('posts.index', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // CREATE POST - Anyone logged in can access
     public function create()
     {
+        // No restriction - all logged-in users can create posts
         return view('posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // STORE POST - Anyone logged in can create
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|min:3|max:255',
             'body' => 'required|min:10',
         ]);
+
         $post = Post::create([
-            'user_id' => 1,
+            'user_id' => auth()->id(),
             'title' => $request->title,
             'body' => $request->body,
         ]);
 
+        // Handle tags
         if ($request->tags) {
             $tagNames = explode(',', $request->tags);
             foreach ($tagNames as $tagName) {
@@ -51,37 +47,35 @@ class PostController extends Controller
         return redirect()->route('posts.show', $post)->with('success', 'Post created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Post $post)
     {
         $post->load([
             'user',
             'tags',
-            'comments' => function($query) {
-                $query->whereNull('parent_id');
-            },
+            'comments' => fn($q) => $q->whereNull('parent_id'),
             'comments.user',
             'comments.replies',
-            'comments.replies.user'  // ← FIXED: changed "commentss" to "comments"
+            'comments.replies.user'
         ]);
         return view('posts.show', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // EDIT POST - Check permission
     public function edit(Post $post)
     {
+        if (!auth()->user()->canEditPost($post)) {
+            abort(403, 'You do not have permission to edit this post.');
+        }
         return view('posts.edit', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // UPDATE POST - Check permission
     public function update(Request $request, Post $post)
     {
+        if (!auth()->user()->canEditPost($post)) {
+            abort(403, 'You do not have permission to edit this post.');
+        }
+
         $request->validate([
             'title' => 'required|min:3|max:255',
             'body' => 'required|min:10',
@@ -92,6 +86,7 @@ class PostController extends Controller
             'body' => $request->body,
         ]);
 
+        // Sync tags
         if ($request->tags) {
             $tagNames = explode(',', $request->tags);
             $tagIds = [];
@@ -103,14 +98,17 @@ class PostController extends Controller
         } else {
             $post->tags()->detach();
         }
+
         return redirect()->route('posts.show', $post)->with('success', 'Post updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // DELETE POST - Check permission
     public function destroy(Post $post)
     {
+        if (!auth()->user()->canDeletePost($post)) {
+            abort(403, 'You do not have permission to delete this post.');
+        }
+
         $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
     }
