@@ -68,6 +68,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
