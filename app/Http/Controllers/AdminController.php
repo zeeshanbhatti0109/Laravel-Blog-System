@@ -7,9 +7,9 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function __construct()
+    public function dashboard()
     {
-        $this->middleware(['auth', 'role:admin']);
+        return view('admin.dashboard');
     }
 
     public function users()
@@ -33,6 +33,7 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users')->with('success', 'User role updated successfully');
     }
+
     public function deleteUser(User $user)
     {
         // Prevent admin from deleting themselves

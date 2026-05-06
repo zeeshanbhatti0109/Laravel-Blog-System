@@ -5,9 +5,11 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="display-6">📖 All Blog Posts</h1>
+    @auth
     <a href="{{ route('posts.create') }}" class="btn btn-primary rounded-pill">
         ➕ Create New Post
     </a>
+    @endauth
 </div>
 
 <div class="row g-4">
@@ -49,9 +51,15 @@
     <div class="col-12 text-center py-5">
         <h1 class="display-6">📭</h1>
         <p class="lead">No posts yet. Be the first to create one!</p>
+        @auth
         <a href="{{ route('posts.create') }}" class="btn btn-primary">
             Create First Post
         </a>
+        @else
+        <a href="{{ route('login') }}" class="btn btn-primary">
+            Login to Create Post
+        </a>
+        @endauth
     </div>
     @endforelse
 </div>
