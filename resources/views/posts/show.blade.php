@@ -8,11 +8,16 @@
         <div class="d-flex justify-content-between align-items-start mb-3">
             <h2 class="mb-0">{{ $post->title }}</h2>
 
+            @auth
+            @if(auth()->user()->canEditPost($post) || auth()->user()->canDeletePost($post))
             <div>
+                @if(auth()->user()->canEditPost($post))
                 <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">
                     ✏️ Edit
                 </a>
+                @endif
 
+                @if(auth()->user()->canDeletePost($post))
                 <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
@@ -21,19 +26,21 @@
                         🗑️ Delete
                     </button>
                 </form>
+                @endif
             </div>
+            @endif
+            @endauth
         </div>
 
-        <!-- FIXED: Changed route('users.posts') to direct URL with slug -->
         <div class="text-muted mb-3">
-            <span>👤 By <a href="/author/{{ $post->user->slug }}/posts" class="text-decoration-none fw-bold">{{
+            <span>👤 By <a href="{{ route('users.posts', $post->user) }}" class="text-decoration-none fw-bold">{{
                     $post->user->name }}</a></span>
             <span class="mx-2">•</span>
             <span>📅 {{ $post->created_at->format('F j, Y') }}</span>
         </div>
 
         <div class="mb-4">
-            <p class="lead">{{ nl2br(e($post->body)) }}</p>
+            <p class="lead">{!! nl2br(e($post->body)) !!}</p>
         </div>
 
         @if($post->tags->count() > 0)
@@ -59,6 +66,7 @@
     <p class="text-muted fst-italic">No comments yet. Be the first to comment!</p>
     @endforelse
 
+    @auth
     <div class="mt-4 bg-light p-4 rounded">
         <h5 class="mb-3">💭 Add a Comment</h5>
 
@@ -68,6 +76,12 @@
             <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
         </form>
     </div>
+    @else
+    <div class="mt-4 bg-light p-4 rounded text-center">
+        <p class="mb-2">💭 Want to join the discussion?</p>
+        <a href="{{ route('login') }}" class="btn btn-primary">Login to Comment</a>
+    </div>
+    @endauth
 </div>
 
 <div class="mt-4">

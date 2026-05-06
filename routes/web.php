@@ -20,28 +20,30 @@ Route::get('/', fn() => redirect()->route('posts.index'));
 
 // ========== PUBLIC ROUTES (No login required) ==========
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 Route::get('/author/{user:slug}/posts', [UserController::class, 'posts'])->name('users.posts');
 Route::get('/tags/{tag:slug}/posts', [TagController::class, 'posts'])->name('tags.posts');
 
 // ========== PROTECTED ROUTES (Login required) ==========
 Route::middleware(['auth'])->group(function () {
-    // Post CRUD
+    // Post CRUD — create route MUST be before {post:slug} wildcard
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
-    
+
     // Comments
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
+// Post show (public) — MUST be after /posts/create to avoid wildcard matching "create" as a slug
+Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+
 // ========== ADMIN ONLY ROUTES ==========
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
-    
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
     // User management
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');

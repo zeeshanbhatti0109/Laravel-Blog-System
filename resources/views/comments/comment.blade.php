@@ -4,11 +4,12 @@
     <div class="bg-white p-3 rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-start">
             <div>
-                <strong><a href="/author/{{ $comment->user->slug }}/posts" class="text-decoration-none text-dark">{{ $comment->user->name }}</a></strong>
+                <strong><a href="{{ route('users.posts', $comment->user) }}" class="text-decoration-none text-dark">{{ $comment->user->name }}</a></strong>
                 <small class="text-muted ms-2">{{ $comment->created_at->diffForHumans() }}</small>
             </div>
             
-            @if(auth()->check() && auth()->id() == 1)
+            @auth
+            @if(auth()->user()->isAdmin() || auth()->id() === $comment->user_id)
             <form action="{{ route('comments.destroy', $comment) }}" method="POST" class="d-inline">
                 @csrf
                 @method('DELETE')
@@ -17,10 +18,12 @@
                 </button>
             </form>
             @endif
+            @endauth
         </div>
         
         <p class="mb-2 mt-2">{{ $comment->body }}</p>
         
+        @auth
         <button class="btn btn-sm btn-outline-primary reply-btn" data-comment-id="{{ $comment->id }}">
             💬 Reply
         </button>
@@ -34,6 +37,7 @@
                 <button type="button" class="btn btn-sm btn-secondary mt-2 cancel-reply" data-comment-id="{{ $comment->id }}">Cancel</button>
             </form>
         </div>
+        @endauth
     </div>
     
     @if($comment->replies->count() > 0)
